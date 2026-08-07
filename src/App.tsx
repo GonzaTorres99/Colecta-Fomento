@@ -1,121 +1,103 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { CelebrationModal } from './components/CelebrationModal'
+import { EmptyState } from './components/EmptyState'
+import { ErrorState } from './components/ErrorState'
+import { LoadingState } from './components/LoadingState'
+import { ProgressBar } from './components/ProgressBar'
+import { SyncStatus } from './components/SyncStatus'
+import { useGoogleSheetsData } from './hooks/useGoogleSheetsData'
 import './App.css'
 
+const COLLECTION_GOAL = 5_000_000
+
 function App() {
-  const [count, setCount] = useState(0)
+  const {
+    data,
+    error,
+    hasSuccessfulSync,
+    isInitialLoading,
+    isRefreshing,
+    lastSyncedAt,
+    refresh,
+  } = useGoogleSheetsData()
+
+  const totalRecaudado = data.reduce((total, record) => total + record.totalRecaudado, 0)
+  const isGoalReached = hasSuccessfulSync && totalRecaudado >= COLLECTION_GOAL
+  const [isCelebrationOpen, setIsCelebrationOpen] = useState(false)
+  const hasReachedGoalRef = useRef(false)
+
+  useEffect(() => {
+    if (isGoalReached && !hasReachedGoalRef.current) {
+      setIsCelebrationOpen(true)
+      hasReachedGoalRef.current = true
+    } else if (!isGoalReached) {
+      hasReachedGoalRef.current = false
+    }
+  }, [isGoalReached])
+
+  const handleRefresh = () => {
+    void refresh()
+  }
+
+  let content: ReactNode
+
+  if (isInitialLoading && !hasSuccessfulSync) {
+    content = <LoadingState />
+  } else if (error && !hasSuccessfulSync) {
+    content = <ErrorState message={error} onRetry={handleRefresh} isRetrying={isRefreshing} />
+  } else if (data.length === 0) {
+    content = <EmptyState />
+  } else {
+    content = <ProgressBar total={totalRecaudado} goal={COLLECTION_GOAL} />
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <main className="campaign-page">
+      <header className="campaign-header">
+        <div className="campaign-header__line" aria-hidden="true" />
+        <p className="campaign-header__club">Club Centro Fomento Los Hornos</p>
+        <h1>Colecta Fomento</h1>
+        <p className="campaign-header__copy">
+          Los jugadores de Primera Divisi&oacute;n del Club Centro Fomento Los Hornos est&aacute;n ayudando a una
+          familia a recaudar $5.000.000 para que un ni&ntilde;o consiga una silla de ruedas.
+        </p>
+      </header>
+
+      <section className="campaign-stage" aria-label="Avance de la colecta">
+        <div className="campaign-tools">
+          <SyncStatus
+            error={hasSuccessfulSync ? error : null}
+            isInitialLoading={isInitialLoading}
+            isRefreshing={isRefreshing}
+            lastSyncedAt={lastSyncedAt}
+          />
+          <button
+            type="button"
+            className="button button--primary"
+            onClick={handleRefresh}
+            disabled={isInitialLoading || isRefreshing}
+          >
+            <span
+              className={isInitialLoading || isRefreshing ? 'button__spinner' : 'button__refresh'}
+              aria-hidden="true"
+            >
+              &#8635;
+            </span>
+            {isInitialLoading || isRefreshing ? 'Actualizando...' : 'Actualizar monto'}
+          </button>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+
+        <div className="campaign-content">{content}</div>
       </section>
 
-      <div className="ticks"></div>
+      <footer className="campaign-footer">Hecho por Gonzalo Torres</footer>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <CelebrationModal
+        isOpen={isCelebrationOpen}
+        onClose={() => setIsCelebrationOpen(false)}
+        total={totalRecaudado}
+      />
+    </main>
   )
 }
 
