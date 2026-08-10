@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { CelebrationModal } from './components/CelebrationModal'
+import { DonationDetails } from './components/DonationDetails'
 import { EmptyState } from './components/EmptyState'
 import { ErrorState } from './components/ErrorState'
 import { LoadingState } from './components/LoadingState'
 import { ProgressBar } from './components/ProgressBar'
 import { SyncStatus } from './components/SyncStatus'
 import { useGoogleSheetsData } from './hooks/useGoogleSheetsData'
+import clubLogo from './assets/images/@martinadiazph.png'
+import teamPhoto from './assets/images/WhatsApp Image 2026-08-06 at 9.06.58 PM.jpeg'
 import './App.css'
 
 const COLLECTION_GOAL = 5_000_000
@@ -53,13 +56,23 @@ function App() {
 
   return (
     <main className="campaign-page">
+      <figure className="team-backdrop">
+        <img src={teamPhoto} alt="Jugadores de Primera Division del Club Centro Fomento Los Hornos" />
+      </figure>
+
       <header className="campaign-header">
         <div className="campaign-header__line" aria-hidden="true" />
-        <p className="campaign-header__club">Club Centro Fomento Los Hornos</p>
-        <h1>Colecta Fomento</h1>
+        <div className="campaign-header__identity">
+          <img className="campaign-header__logo" src={clubLogo} alt="Escudo del Club Centro Fomento Los Hornos" />
+          <div>
+            <p className="campaign-header__club">Club Centro Fomento Los Hornos</p>
+            <h1>Colecta Fomento</h1>
+          </div>
+        </div>
         <p className="campaign-header__copy">
-          Los jugadores de Primera Divisi&oacute;n del Club Centro Fomento Los Hornos est&aacute;n ayudando a una
-          familia a recaudar $5.000.000 para que un ni&ntilde;o consiga una silla de ruedas.
+          La Primera Divisi&oacute;n de F&uacute;tbol del Club Centro Fomento Los Hornos busca recaudar $5.000.000
+          para disputar su primer torneo regional. Acompa&ntilde;anos en esta colecta y ayudanos a llegar a
+          nuestro objetivo.
         </p>
       </header>
 
@@ -87,10 +100,37 @@ function App() {
           </button>
         </div>
 
-        <div className="campaign-content">{content}</div>
+        <div className="campaign-content">
+          <div className="campaign-dashboard">
+            {content}
+            <DonationDetails />
+          </div>
+        </div>
       </section>
 
-      <footer className="campaign-footer">Hecho por Gonzalo Torres</footer>
+      <footer className="campaign-footer">
+        <img className="campaign-footer__logo" src={clubLogo} alt="Escudo del Club Centro Fomento Los Hornos" />
+        <div className="campaign-footer__author">
+          <p>
+            Hecho por{' '}
+            <a
+              className="campaign-footer__linkedin"
+              href="https://www.linkedin.com/in/gonzalo-torres-67160327b"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Visitar el perfil de LinkedIn de Gonzalo Torres"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M5.14 3C3.96 3 3 3.96 3 5.14s.96 2.14 2.14 2.14 2.14-.96 2.14-2.14S6.32 3 5.14 3ZM3.29 8.91v11.8h3.7V8.91h-3.7Zm6.02 0v11.8h3.7v-5.84c0-1.54.29-3.03 2.2-3.03 1.88 0 1.9 1.76 1.9 3.13v5.74h3.7v-6.48c0-3.18-.68-5.63-4.4-5.63-1.79 0-2.99.98-3.48 1.91h-.05V8.91h-3.55Z" />
+              </svg>
+              <span>Gonzalo Torres</span>
+            </a>
+          </p>
+          <a className="campaign-footer__email" href="mailto:gonzalotorres317@gmial.com">
+            gonzalotorres317@gmial.com
+          </a>
+        </div>
+      </footer>
 
       <CelebrationModal
         isOpen={isCelebrationOpen}

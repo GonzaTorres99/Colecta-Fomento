@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import clubLogo from '../assets/images/@martinadiazph.png'
 import { formatCurrency } from '../utils/formatDate'
 
 interface CelebrationModalProps {
@@ -38,16 +39,14 @@ export function CelebrationModal({ isOpen, onClose, total }: CelebrationModalPro
       }}
     >
       <section className="celebration-modal__panel" role="dialog" aria-modal="true" aria-labelledby="celebration-title">
-        <span className="celebration-modal__seal" aria-hidden="true">
-          CF
-        </span>
+        <img className="celebration-modal__logo" src={clubLogo} alt="Escudo del Club Centro Fomento Los Hornos" />
         <p className="celebration-modal__eyebrow">Objetivo cumplido</p>
         <h2 id="celebration-title">Felicitaciones, terminamos la colecta</h2>
         <p className="celebration-modal__thanks">
           Gracias a todas las personas que colaboraron y a quienes difundieron esta causa.
         </p>
         <div className="celebration-modal__total">
-          <span>Recaudado para la silla de ruedas</span>
+          <span>Recaudado para el torneo regional</span>
           <strong>{formatCurrency(total)}</strong>
         </div>
         <button type="button" className="button celebration-modal__button" onClick={onClose} autoFocus>

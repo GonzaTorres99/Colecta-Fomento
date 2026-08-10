@@ -1,6 +1,6 @@
 :root {
   color: #062e46;
-  background: #e9f8ff;
+  background: #062e46;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -22,9 +22,7 @@ body,
 }
 
 body {
-  background:
-    radial-gradient(circle at 88% 8%, rgba(67, 188, 235, 0.48), transparent 29%),
-    linear-gradient(135deg, #ffffff 0 29%, #effbff 45%, #d2f1ff 68%, #a9ddf4 100%);
+  background: #062e46;
 }
 
 button,

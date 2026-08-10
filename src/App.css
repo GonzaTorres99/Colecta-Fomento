@@ -9,6 +9,8 @@
 }
 
 .campaign-page {
+  position: relative;
+  isolation: isolate;
   width: min(100% - 36px, 1060px);
   height: 100dvh;
   margin: 0 auto;
@@ -19,10 +21,65 @@
   color: var(--fomento-deep);
 }
 
+.team-backdrop {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  margin: 0;
+  overflow: hidden;
+  background: var(--fomento-deep);
+  pointer-events: none;
+}
+
+.team-backdrop img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  filter: brightness(0.46) saturate(0.88);
+}
+
+.team-backdrop::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--fomento-deep) 0%,
+    rgba(6, 46, 70, 0.94) 7%,
+    rgba(6, 46, 70, 0.3) 24%,
+    transparent 36% 64%,
+    rgba(6, 46, 70, 0.3) 76%,
+    rgba(6, 46, 70, 0.94) 93%,
+    var(--fomento-deep) 100%
+  );
+  content: '';
+}
+
+.campaign-header,
+.campaign-stage,
+.campaign-footer {
+  position: relative;
+  z-index: 1;
+}
+
 .campaign-header {
   position: relative;
   max-width: 770px;
   padding-left: clamp(18px, 4vw, 48px);
+}
+
+.campaign-header__identity {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 19px);
+}
+
+.campaign-header__logo {
+  width: clamp(74px, 9vw, 118px);
+  height: auto;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 6px 10px rgba(6, 46, 70, 0.18));
 }
 
 .campaign-header__line {
@@ -46,24 +103,31 @@
   text-transform: uppercase;
 }
 
+.campaign-header__club {
+  color: var(--fomento-sky);
+  text-shadow: 0 2px 10px rgba(0, 15, 26, 0.72);
+}
+
 .campaign-header h1 {
   margin: 0.2rem 0 0.35rem;
-  color: var(--fomento-deep);
+  color: var(--fomento-white);
   font-family: "Arial Narrow", "Bahnschrift Condensed", Impact, sans-serif;
   font-size: clamp(2.45rem, 6.2vw, 5.25rem);
   font-weight: 900;
   letter-spacing: -0.055em;
   line-height: 0.9;
   text-transform: uppercase;
+  text-shadow: 0 3px 16px rgba(0, 15, 26, 0.74);
 }
 
 .campaign-header__copy {
   max-width: 720px;
   margin: 0;
-  color: var(--fomento-ink);
+  color: rgba(255, 255, 255, 0.96);
   font-family: "Trebuchet MS", Arial, sans-serif;
   font-size: clamp(0.76rem, 1.7vw, 1rem);
   line-height: 1.45;
+  text-shadow: 0 2px 10px rgba(0, 15, 26, 0.76);
 }
 
 .campaign-stage {
@@ -85,6 +149,19 @@
   min-height: 0;
   display: grid;
   place-items: center;
+}
+
+.campaign-dashboard {
+  width: min(100%, 1000px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 0.42fr);
+  align-items: center;
+  gap: clamp(16px, 2.8vw, 30px);
+}
+
+.campaign-dashboard > .progress-card,
+.campaign-dashboard > .state-card {
+  width: 100%;
 }
 
 .button {
@@ -141,7 +218,7 @@
 
 .sync-status {
   min-width: 0;
-  color: var(--fomento-ink);
+  color: var(--fomento-white);
   font-family: "Trebuchet MS", Arial, sans-serif;
   font-size: clamp(0.68rem, 1.4vw, 0.8rem);
 }
@@ -158,8 +235,8 @@
   height: 8px;
   flex: 0 0 auto;
   border-radius: 50%;
-  background: var(--fomento-blue);
-  box-shadow: 0 0 0 4px rgba(67, 188, 235, 0.22);
+  background: var(--fomento-sky);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
 }
 
 .sync-status__indicator--syncing {
@@ -169,8 +246,9 @@
 
 .sync-status__warning {
   margin: 5px 0 0;
-  color: #9a4b08;
+  color: #ffe2af;
   font-size: 0.7rem;
+  text-shadow: 0 2px 8px rgba(0, 15, 26, 0.72);
 }
 
 .progress-card {
@@ -180,8 +258,9 @@
   overflow: hidden;
   border: 1px solid rgba(8, 126, 186, 0.24);
   border-radius: 16px;
-  background: var(--fomento-white);
-  box-shadow: 0 22px 55px rgba(6, 46, 70, 0.13);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 22px 55px rgba(6, 46, 70, 0.21);
+  backdrop-filter: blur(8px);
 }
 
 .progress-card::before {
@@ -312,6 +391,111 @@
   letter-spacing: -0.07em;
 }
 
+.donation-card {
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid rgba(67, 188, 235, 0.52);
+  border-radius: 16px;
+  color: var(--fomento-deep);
+  background: rgba(233, 248, 255, 0.94);
+  box-shadow: 0 18px 40px rgba(0, 15, 26, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+.donation-card__eyebrow {
+  margin: 0 0 5px;
+  color: var(--fomento-blue);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.donation-card h2 {
+  margin: 0;
+  color: var(--fomento-deep);
+  font-family: "Arial Narrow", "Bahnschrift Condensed", Impact, sans-serif;
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.donation-card__table {
+  width: 100%;
+  margin-top: 14px;
+  border-collapse: collapse;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.donation-card__table th,
+.donation-card__table td {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(6, 46, 70, 0.14);
+}
+
+.donation-card__table tr:last-child th,
+.donation-card__table tr:last-child td {
+  border-bottom: 0;
+}
+
+.donation-card__table th {
+  padding-right: 12px;
+  color: var(--fomento-ink);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.donation-card__table td:nth-child(2) {
+  width: 100%;
+}
+
+.donation-card__table code {
+  color: var(--fomento-deep);
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: clamp(0.7rem, 1.3vw, 0.82rem);
+  font-weight: 800;
+}
+
+.donation-card__copy {
+  min-width: 68px;
+  min-height: 31px;
+  margin-left: 12px;
+  padding: 6px 9px;
+  border: 1px solid var(--fomento-blue);
+  border-radius: 5px;
+  color: var(--fomento-white);
+  background: var(--fomento-blue);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.donation-card__copy:hover {
+  color: var(--fomento-deep);
+  background: var(--fomento-sky);
+  transform: translateY(-1px);
+}
+
+.donation-card__copy:focus-visible {
+  outline: 3px solid var(--fomento-deep);
+  outline-offset: 3px;
+}
+
+.donation-card__feedback {
+  min-height: 1em;
+  margin: 8px 0 0;
+  color: var(--fomento-ink);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
 .state-card {
   width: min(100%, 700px);
   padding: clamp(24px, 6vh, 50px);
@@ -366,13 +550,68 @@
 }
 
 .campaign-footer {
+  display: flex;
+  align-items: center;
+  justify-self: stretch;
+  justify-content: flex-start;
+  gap: 9px;
   padding-top: clamp(8px, 1.8vh, 18px);
-  color: var(--fomento-ink);
+  color: rgba(255, 255, 255, 0.94);
   font-family: "Trebuchet MS", Arial, sans-serif;
   font-size: clamp(0.62rem, 1.2vw, 0.75rem);
   font-weight: 700;
   letter-spacing: 0.04em;
-  text-align: center;
+  text-align: left;
+  text-shadow: 0 2px 8px rgba(0, 15, 26, 0.72);
+}
+
+.campaign-footer__logo {
+  width: clamp(36px, 4.4vw, 52px);
+  height: auto;
+  filter: drop-shadow(0 2px 3px rgba(6, 46, 70, 0.12));
+}
+
+.campaign-footer__author {
+  min-width: 0;
+}
+
+.campaign-footer__author p {
+  margin: 0;
+}
+
+.campaign-footer__linkedin {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--fomento-white);
+  text-decoration-color: rgba(255, 255, 255, 0.52);
+  text-underline-offset: 3px;
+}
+
+.campaign-footer__linkedin:hover {
+  color: var(--fomento-sky);
+}
+
+.campaign-footer__linkedin svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex: 0 0 auto;
+  fill: currentColor;
+}
+
+.campaign-footer__email {
+  display: inline-block;
+  margin-top: 2px;
+  color: var(--fomento-sky);
+  font-size: 0.88em;
+  text-decoration-color: rgba(67, 188, 235, 0.55);
+  text-underline-offset: 3px;
+}
+
+.campaign-footer__linkedin:focus-visible,
+.campaign-footer__email:focus-visible {
+  outline: 3px solid var(--fomento-white);
+  outline-offset: 3px;
 }
 
 .celebration-modal {
@@ -417,21 +656,12 @@
   content: '';
 }
 
-.celebration-modal__seal {
-  display: grid;
-  width: clamp(58px, 11vw, 86px);
-  height: clamp(58px, 11vw, 86px);
+.celebration-modal__logo {
+  display: block;
+  width: clamp(100px, 16vw, 148px);
+  height: auto;
   margin: 0 auto clamp(14px, 2.5vw, 22px);
-  place-items: center;
-  border: clamp(4px, 0.7vw, 6px) solid var(--fomento-sky);
-  border-radius: 50%;
-  color: var(--fomento-white);
-  background: var(--fomento-blue);
-  box-shadow: 0 0 0 7px var(--fomento-white), 0 0 0 9px var(--fomento-blue);
-  font-family: "Arial Narrow", "Bahnschrift Condensed", Impact, sans-serif;
-  font-size: clamp(1.25rem, 3vw, 2rem);
-  font-weight: 900;
-  letter-spacing: -0.08em;
+  filter: drop-shadow(0 9px 12px rgba(6, 46, 70, 0.22));
 }
 
 .celebration-modal__eyebrow {
@@ -533,7 +763,7 @@
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 700px) {
   .campaign-page {
     width: min(100% - 24px, 1060px);
     padding-top: 16px;
@@ -547,8 +777,23 @@
     width: 6px;
   }
 
+  .team-backdrop {
+    inset: 0 0 auto;
+    height: min(70vw, 280px);
+  }
+
+  .campaign-header__logo {
+    width: clamp(64px, 19vw, 82px);
+  }
+
   .campaign-tools {
     gap: 10px;
+  }
+
+  .campaign-dashboard {
+    width: min(100%, 540px);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
   }
 
   .button {
@@ -606,6 +851,61 @@
 
   .celebration-modal h2 {
     font-size: clamp(1.85rem, 8.3vw, 2.6rem);
+  }
+}
+
+@media (max-width: 700px) {
+  .campaign-page {
+    padding-top: clamp(20px, 4vh, 30px);
+    padding-bottom: 14px;
+  }
+
+  .campaign-header h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .campaign-stage {
+    padding-top: clamp(14px, 2.5vh, 18px);
+    gap: clamp(12px, 2vh, 16px);
+  }
+
+  .campaign-content {
+    align-items: center;
+  }
+}
+
+@media (max-width: 700px) and (max-height: 700px) {
+  .team-backdrop {
+    height: min(58vw, 230px);
+  }
+
+  .campaign-dashboard {
+    gap: 8px;
+  }
+
+  .donation-card {
+    padding: 10px 14px;
+  }
+
+  .donation-card__eyebrow {
+    display: none;
+  }
+
+  .donation-card h2 {
+    font-size: 1.18rem;
+  }
+
+  .donation-card__table {
+    margin-top: 6px;
+  }
+
+  .donation-card__table th,
+  .donation-card__table td {
+    padding: 5px 0;
+  }
+
+  .donation-card__feedback {
+    display: none;
   }
 }
 
