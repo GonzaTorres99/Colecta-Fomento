@@ -126,8 +126,8 @@ function App() {
               <span>Gonzalo Torres</span>
             </a>
           </p>
-          <a className="campaign-footer__email" href="mailto:gonzalotorres317@gmial.com">
-            gonzalotorres317@gmial.com
+          <a className="campaign-footer__email" href="mailto:gonzalotorres317@gmail.com">
+            gonzalotorres317@gmail.com
           </a>
         </div>
       </footer>

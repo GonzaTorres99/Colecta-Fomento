@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 type DonationField = 'cbu' | 'alias'
 
 const donationDetails: Record<DonationField, { label: string; value: string }> = {
-  cbu: { label: 'CBU', value: 'cbufomento' },
-  alias: { label: 'Alias', value: 'aliasfomento' },
+  alias: { label: 'Alias', value: 'Fomento.regional' },
+  cbu: { label: 'CBU', value: '4530000800018262248944' },
 }
 
 function copyWithFallback(value: string) {
