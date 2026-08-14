@@ -4,6 +4,7 @@ import { DonationDetails } from './components/DonationDetails'
 import { EmptyState } from './components/EmptyState'
 import { ErrorState } from './components/ErrorState'
 import { LoadingState } from './components/LoadingState'
+import { MilestoneModal } from './components/MilestoneModal'
 import { ProgressBar } from './components/ProgressBar'
 import { SyncStatus } from './components/SyncStatus'
 import { useGoogleSheetsData } from './hooks/useGoogleSheetsData'
@@ -12,6 +13,23 @@ import teamPhoto from './assets/images/WhatsApp Image 2026-08-06 at 9.06.58 PM.j
 import './App.css'
 
 const COLLECTION_GOAL = 5_000_000
+const MILESTONE_AMOUNTS = [500_000, 1_000_000, 1_500_000, 2_000_000, 2_500_000, 3_000_000, 4_000_000, 4_500_000] as const
+
+function getReachedMilestone(total: number): number | null {
+  if (total >= COLLECTION_GOAL) {
+    return null
+  }
+
+  for (let index = MILESTONE_AMOUNTS.length - 1; index >= 0; index -= 1) {
+    const milestone = MILESTONE_AMOUNTS[index]
+
+    if (total >= milestone) {
+      return milestone
+    }
+  }
+
+  return null
+}
 
 function App() {
   const {
@@ -27,7 +45,9 @@ function App() {
   const totalRecaudado = data.reduce((total, record) => total + record.totalRecaudado, 0)
   const isGoalReached = hasSuccessfulSync && totalRecaudado >= COLLECTION_GOAL
   const [isCelebrationOpen, setIsCelebrationOpen] = useState(false)
+  const [milestoneAmount, setMilestoneAmount] = useState<number | null>(null)
   const hasReachedGoalRef = useRef(false)
+  const hasEvaluatedMilestoneRef = useRef(false)
 
   useEffect(() => {
     if (isGoalReached && !hasReachedGoalRef.current) {
@@ -37,6 +57,15 @@ function App() {
       hasReachedGoalRef.current = false
     }
   }, [isGoalReached])
+
+  useEffect(() => {
+    if (!hasSuccessfulSync || hasEvaluatedMilestoneRef.current) {
+      return
+    }
+
+    hasEvaluatedMilestoneRef.current = true
+    setMilestoneAmount(getReachedMilestone(totalRecaudado))
+  }, [hasSuccessfulSync, totalRecaudado])
 
   const handleRefresh = () => {
     void refresh()
@@ -137,6 +166,7 @@ function App() {
         onClose={() => setIsCelebrationOpen(false)}
         total={totalRecaudado}
       />
+      <MilestoneModal amount={milestoneAmount} onClose={() => setMilestoneAmount(null)} />
     </main>
   )
 }
